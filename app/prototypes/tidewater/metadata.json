@@ -1,0 +1,13 @@
+{
+  "title": "Tidewater",
+  "description": "Explore wind-driven waves, coastal shallows, and shifting light in a real-time water study.",
+  "tags": [
+    "Water",
+    "WebGL",
+    "Simulation"
+  ],
+  "createdAt": "2026-11-21",
+  "updatedAt": "2026-11-21T23:46:42Z",
+  "hidden": false,
+  "public": false
+}
