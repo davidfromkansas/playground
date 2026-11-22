@@ -1,0 +1,9 @@
+{
+  "title": "Wave Particles",
+  "description": "A wave tank for studying particle subdivision, reflected wavefronts and hull wakes.",
+  "tags": ["Simulation", "Research", "Water"],
+  "createdAt": "2026-11-21",
+  "updatedAt": "2026-11-22T00:27:38Z",
+  "hidden": false,
+  "public": false
+}

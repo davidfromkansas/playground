@@ -68,3 +68,4 @@ Wrap every localStorage read and write in try/catch. Load saved state on mount, 
 - Stage screenshot files on the same filesystem as their destination. Renaming between a system temporary directory and a mounted checkout can fail with EXDEV after successful captures.
 - GitHub Pages serves static files. Deploy this repository’s root to Vercel for middleware, private assets, and API routes.
 - Use the repository owner’s GitHub noreply address for agent commits when email privacy protection rejects a push.
+- Stop the development server before building or capturing thumbnails in the same checkout. Concurrent writes to the Next.js build directory can leave the production build without a page entry.
