@@ -32,7 +32,7 @@ export function sample(selection: Selection, time: number, angle: number): Frame
   const demo = selection === "demo";
   let move: Move = demo ? "stand" : selection;
   let phase = demo ? 0 : Math.min(1, time/duration[selection]);
-  let x=0, lift=0, heading=angle, beam=0, hit=0, skid=0, miss=0, flash=0, eyes=0;
+  let x=0, lift=0, heading=angle, miss=0, flash=0, eyes=0;
   const t=time;
   if (demo) {
     // The moving camera follows the pilot around to the engine side, then catches the rifle swing.
@@ -52,7 +52,7 @@ export function sample(selection: Selection, time: number, angle: number): Frame
   } else if(move==="walk") phase=t/1.44;
 
   const frame: Frame = {move,sheet:"stand",x,lift,shadow:lift,heading,door:demo ? ramp(t,.25,3.7) : 1,
-    beam,hit,skid,miss,flash,eyes,blackout:demo?ramp(t,29.36,29.96):0,scar:demo&&t>7.54};
+    beam:0,hit:0,skid:0,miss,flash,eyes,blackout:demo?ramp(t,29.36,29.96):0,scar:demo&&t>7.54};
   if(move==="stand") return frame;
   if(move==="walk"){frame.sheet="walk";frame.slices=walk[Math.floor((phase%1)*walk.length)];return frame;}
   if(move==="guard"||move==="attack"){
