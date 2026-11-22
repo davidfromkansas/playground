@@ -1,0 +1,196 @@
+.bw-shell {
+  max-width: 1450px;
+  margin: auto;
+  padding: 30px clamp(16px, 4vw, 60px) 50px;
+}
+.bw-heading {
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 18px;
+  margin-bottom: 22px;
+}
+.bw-heading h1 {
+  font:
+    normal clamp(46px, 6vw, 78px)/1.04 Georgia,
+    serif;
+  letter-spacing: -0.065em;
+  margin: 0 0 8px;
+}
+.bw-heading p,
+.bw-profile p,
+.bw-timeline small,
+.bw-controls small {
+  color: var(--muted-foreground);
+}
+.bw-heading a {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 7px;
+  font-size: 13px;
+  text-decoration: underline;
+  text-underline-offset: 4px;
+}
+.bw-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 266px;
+  gap: 20px;
+  align-items: start;
+}
+.bw-stage {
+  position: relative;
+  height: clamp(350px, 54vh, 620px);
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--muted);
+}
+.bw-stage canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+  touch-action: none;
+  cursor: grab;
+}
+.bw-stage p {
+  position: absolute;
+  inset: 30% 10% auto;
+  padding: 10px;
+  background: var(--card);
+}
+.bw-timeline,
+.bw-actions,
+.bw-stops {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.bw-timeline {
+  padding: 8px 0;
+}
+.bw-shell button,
+.bw-controls button {
+  min-height: 44px;
+}
+.bw-timeline button {
+  width: 44px;
+}
+.bw-timeline input,
+.bw-controls input {
+  width: 100%;
+  height: 44px;
+  accent-color: var(--mesh);
+}
+.bw-timeline small,
+.bw-controls small {
+  font:
+    12px var(--font-geist-mono),
+    monospace;
+}
+.bw-timeline small {
+  min-width: 4ch;
+  text-align: right;
+}
+.bw-profile,
+.bw-controls {
+  padding: 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+}
+.bw-profile {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+.bw-profile canvas {
+  display: block;
+  width: 42%;
+  height: 115px;
+}
+.bw-profile h2,
+.bw-controls h2 {
+  font-size: 19px;
+  font-weight: 570;
+  letter-spacing: -0.04em;
+}
+.bw-profile p {
+  margin: 3px 0;
+  font-size: 12px;
+}
+.bw-stops {
+  gap: 2px;
+}
+.bw-stops button {
+  min-width: 44px;
+  padding: 0 6px;
+  font-size: 12px;
+  border-radius: 6px;
+}
+.bw-stops button[aria-pressed="true"] {
+  background: var(--muted);
+  color: var(--mesh);
+}
+.bw-controls h2 {
+  margin-bottom: 14px;
+}
+.bw-controls label {
+  display: block;
+  margin: 5px 0;
+  font-size: 14px;
+}
+.bw-controls label > span,
+.bw-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.bw-controls select {
+  display: block;
+  width: 100%;
+  height: 44px;
+  margin: 5px 0 14px;
+  background: var(--background);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0 8px;
+}
+.bw-actions {
+  border-top: 1px solid var(--border);
+  padding-top: 7px;
+}
+.bw-mobile {
+  display: none;
+}
+@media (max-width: 780px) {
+  .bw-shell {
+    padding: 20px 12px;
+  }
+  .bw-layout {
+    display: block;
+  }
+  .bw-layout aside {
+    display: none;
+  }
+  .bw-mobile {
+    display: block;
+    margin: 0 0 8px;
+  }
+  .bw-heading {
+    display: block;
+    margin-bottom: 3px;
+  }
+  .bw-stage {
+    height: clamp(320px, 45svh, 480px);
+  }
+}
+@media (max-width: 550px) {
+  .bw-profile {
+    display: block;
+  }
+  .bw-profile canvas {
+    width: 100%;
+    height: 90px;
+  }
+}
