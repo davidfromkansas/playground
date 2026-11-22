@@ -68,3 +68,4 @@ Wrap every localStorage read and write in try/catch. Load saved state on mount, 
 - Stage screenshot files on the same filesystem as their destination. Renaming between a system temporary directory and a mounted checkout can fail with EXDEV after successful captures.
 - GitHub Pages serves static files. Deploy this repository’s root to Vercel for middleware, private assets, and API routes.
 - Use the repository owner’s GitHub noreply address for agent commits when email privacy protection rejects a push.
+- For overhanging cross-section animations, check all baked frames for self-intersections. Clean keyframe silhouettes can still intersect between poses.
