@@ -24,3 +24,6 @@ page.tsx manages interaction. render.ts draws the bottom-to-top slices with near
 
 ## Battle moves
 Attack and Defend are replayable one-shot actions that return to standing. Either button interrupts the current move. The rifle lifts, flashes and recoils. The shield swings across the torso and holds through contact. Both use battle.png and the bottom-up slices and 75 ms timelines in battle-poses.json. The camera can turn during either action.
+
+## Flight
+Fly plays a 27-step takeoff, hover and landing. The two exhaust plumes start one slice below the existing backpack bell mouths. The spread, length and brightness vary during the burn. All exhaust pixels are included in the horizontal slices so the body occludes them correctly from any heading. flight.png stores the packed regions and flight-poses.json records their positions, playback order and altitude for the ground shadow.

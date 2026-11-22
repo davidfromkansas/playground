@@ -1,5 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import flight from "./flight.png";
+import flightPoses from "./flight-poses.json";
 import battle from "./battle.png";
 import poses from "./battle-poses.json";
 import walk from "./walk.png";
@@ -15,9 +17,10 @@ export default function GundamStack() {
   const [walkSheet, setWalkSheet] = useState<HTMLImageElement>();
   const [gait, setGait] = useState<"walk" | "freeze" | "stand">("stand");
   const [battleSheet, setBattleSheet] = useState<HTMLImageElement>();
-  const [action, setAction] = useState<"attack" | "guard" | null>(null);
+  const [flightSheet, setFlightSheet] = useState<HTMLImageElement>();
+  const [action, setAction] = useState<"attack" | "guard" | "fly" | null>(null);
   const actionTime = useRef(0);
-  function perform(move: "attack" | "guard") {
+  function perform(move: "attack" | "guard" | "fly") {
     actionTime.current = 0;
     elapsed.current = 0;
     setGait("stand");
@@ -41,6 +44,10 @@ export default function GundamStack() {
     combat.onload = () => setBattleSheet(combat);
     combat.onerror = () => setError(true);
     combat.src = battle.src;
+    const jets = new Image();
+    jets.onload = () => setFlightSheet(jets);
+    jets.onerror = () => setError(true);
+    jets.src = flight.src;
     setGait(matchMedia("(prefers-reduced-motion: reduce)").matches ? "stand" : "walk");
     try {
       const saved = JSON.parse(localStorage.getItem(key) || "null");
@@ -48,7 +55,7 @@ export default function GundamStack() {
         setSettings(saved); angle.current = saved.angle;
       }
     } catch { /* Use defaults. */ }
-    return () => { img.onload = null; img.onerror = null; animation.onload = null; animation.onerror = null; combat.onload = null; combat.onerror = null; };
+    return () => { img.onload = null; img.onerror = null; animation.onload = null; animation.onerror = null; combat.onload = null; combat.onerror = null; jets.onload = null; jets.onerror = null; };
   }, []);
   function change(next: typeof defaults) {
     angle.current = next.angle; setSettings(next);
@@ -63,11 +70,15 @@ export default function GundamStack() {
       if (gait === "walk" && previous) elapsed.current = (elapsed.current + Math.min(80, time - previous)) % 1440;
       if (action && previous) actionTime.current += Math.min(80, time - previous);
       previous = time;
-      if (action && battleSheet) {
-        const index = Math.floor(actionTime.current / 75);
-        if (index < poses[action].length) {
-          drawStack(ctx!, battleSheet, angle.current, settings.squash, settings.spacing,
-            undefined, poses.rects[poses[action][index]]);
+      const actionSheet = action === "fly" ? flightSheet : battleSheet;
+      if (action && actionSheet) {
+        const sequence = action === "fly" ? flightPoses.fly : poses[action];
+        const index = Math.floor(actionTime.current / (action === "fly" ? 85 : 75));
+        if (index < sequence.length) {
+          const pose = sequence[index];
+          drawStack(ctx!, actionSheet, angle.current, settings.squash, settings.spacing,
+            undefined, action === "fly" ? flightPoses.rects[pose] : poses.rects[pose],
+            action === "fly" ? flightPoses.altitude[pose] : undefined);
           frame = requestAnimationFrame(paint);
           return;
         }
@@ -80,15 +91,16 @@ export default function GundamStack() {
     }
     frame = requestAnimationFrame(paint);
     return () => cancelAnimationFrame(frame);
-  }, [sheet, walkSheet, battleSheet, action, gait, running, settings]);
+  }, [sheet, walkSheet, battleSheet, flightSheet, action, gait, running, settings]);
   const button = "min-h-11 rounded-lg border border-border bg-card px-4";
   return <main className="mx-auto max-w-2xl space-y-5 px-4 py-8">
     <h1 className="text-3xl font-bold">RX-78-2 Gundam</h1>
     <div className="sm:flex sm:items-center sm:gap-6">
       <div className="min-w-0 flex-1"><div data-thumbnail className=" overflow-hidden rounded-xl bg-muted"><canvas ref={canvas} width={180} height={180} aria-label="Animated pixel-art Gundam with shield and rifle" className="w-full [image-rendering:pixelated]" />{error && <p>Sprite sheet failed to load. Reload to retry.</p>}</div>
-        <div className="mt-3 flex gap-2" aria-label="Battle moves">
+        <div className="mt-3 flex gap-2" aria-label="Gundam actions">
           <button className={button} disabled={!battleSheet} onClick={() => perform("attack")}>Attack</button>
           <button className={button} disabled={!battleSheet} onClick={() => perform("guard")}>Defend</button>
+          <button className={button} disabled={!flightSheet} onClick={() => perform("fly")}>Fly</button>
         </div>
       </div>
       <button className={button+" mt-3 sm:hidden"} onClick={() => setPanel(true)}>Adjust stack</button>
