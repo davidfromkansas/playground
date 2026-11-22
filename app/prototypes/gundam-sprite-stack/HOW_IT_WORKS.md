@@ -1,29 +1,23 @@
 ## What It Does
-An articulated RX-78-2 walk cycle on a turntable demonstrates sprite stacking from the supplied figure photograph. Hidden surfaces are inferred.
+Play Hangar Exit as a 30-second scene or trigger ten individual movements. Replay any movement or interrupt the film by selecting another.
 
 ## Architecture
-    horizontal PNG atlas -> rotate and squash each slice -> lift by z -> canvas
+    control -> playback clock -> sequence sample -> horizontal slice regions -> Canvas 2D
 
 ## Frontend / API
-The React page owns the 24-pose, 1.44-second walk loop and independent view rotation. A two-link leg solution positions the hips and knees for alternating foot contact and lift. Each arm swings together with its equipment. Pause walk holds the current pose, and Stand restores the original slice sheet. The angle slider pauses rotation. Squash changes the camera projection and spacing separates layers. Mobile controls open in a bottom sheet. Sliders support arrow keys. Valid settings persist locally. There are no network APIs.
+The page owns playback, pause, rotation and camera settings. A fresh click starts at zero. The walk loops, individual moves settle to standing, and the demo holds its final black frame at 30 seconds. Reduced motion starts in the standing pose. The camera panel becomes a bottom sheet on narrow screens. All controls support standard keyboard activation and sliders support arrow keys. No server API.
 
 ## AI Usage
-The coding assistant authored the sectional geometry from the reference photograph. No inference runs in the app.
+The coding assistant authored the suit and its choreography from a reference photograph. Runtime playback uses precomputed sprite data.
 
 ## Key Dependencies
-React, Next.js static PNG imports, Canvas 2D and requestAnimationFrame.
+React, Next.js image imports, Canvas 2D and requestAnimationFrame.
 
 ## Component Tree
-GundamStack contains the canvas, playback toggle and settings panel.
+GundamStack contains the stage, playback controls, movement buttons and camera panel.
 
 ## Error Handling
-Failed atlas loads show a reload message. Storage and parse failures use defaults. Reduced-motion preferences start the suit standing still.
+Image decoding must complete before playback. A load error is shown on the stage. Storage errors fall back to memory. Unmounting cancels the active animation frame.
 
 ## File Structure
-page.tsx manages interaction. render.ts draws the bottom-to-top slices with nearest sampling. slices.png contains 126 frames of 104 × 80 pixels in one row. walk.png packs the nonempty horizontal sections from every gait pose. walk-rects.json maps these regions to offsets and heights for bottom-to-top rendering. metadata.json registers the prototype.
-
-## Battle moves
-Attack and Defend are replayable one-shot actions that return to standing. Either button interrupts the current move. The rifle lifts, flashes and recoils. The shield swings across the torso and holds through contact. Both use battle.png and the bottom-up slices and 75 ms timelines in battle-poses.json. The camera can turn during either action.
-
-## Flight
-Fly plays a 27-step takeoff, hover and landing. The two exhaust plumes start one slice below the existing backpack bell mouths. The spread, length and brightness vary during the burn. All exhaust pixels are included in the horizontal slices so the body occludes them correctly from any heading. flight.png stores the packed regions and flight-poses.json records their positions, playback order and altitude for the ground shadow.
+page.tsx coordinates loading and user input. sequence.ts maps time to camera and pose. render.ts draws a pixel-aligned stack and composited effects. hangar.ts paints the bay, lighting and floor. stage.css controls layout. The standing, walk, battle, flight and choreography PNGs contain horizontal sections. The JSON tables store source rectangles and offsets. Choreography also records muzzle, grip, shield and visor positions for projected effects.
