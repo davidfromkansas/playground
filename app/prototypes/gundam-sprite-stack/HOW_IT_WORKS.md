@@ -1,5 +1,5 @@
 ## What It Does
-Play Hangar Exit as a 30-second scene or trigger ten individual movements. Replay any movement or interrupt the film by selecting another.
+Play Orbital Platform as a 30-second scene or trigger ten individual movements. Replay any movement or interrupt the film by selecting another.
 
 ## Architecture
     control -> playback clock -> sequence sample -> horizontal slice regions -> Canvas 2D
@@ -20,4 +20,4 @@ GundamStack contains the stage, playback controls, movement buttons and camera p
 Image decoding must complete before playback. A load error is shown on the stage. Storage errors fall back to memory. Unmounting cancels the active animation frame.
 
 ## File Structure
-page.tsx coordinates loading and user input. sequence.ts maps time to camera and pose. render.ts draws a pixel-aligned stack and composited effects. hangar.ts paints the bay, lighting and floor. stage.css controls layout. The standing, walk, battle, flight and choreography PNGs contain horizontal sections. The JSON tables store source rectangles and offsets. Choreography also records muzzle, grip, shield and visor positions for projected effects.
+page.tsx coordinates loading and user input. sequence.ts maps time to camera and pose. render.ts draws a pixel-aligned stack and composited effects. platform.ts projects deck tiles, rim, ribs and underbody from world coordinates. The suit path and contact shadow use that same deck projection. A distant contact marks the source of incoming fire. stage.css controls layout. The standing, walk, battle, flight and choreography PNGs contain horizontal sections. The JSON tables store source rectangles and offsets. Choreography also records muzzle, grip, shield and visor positions for projected effects.

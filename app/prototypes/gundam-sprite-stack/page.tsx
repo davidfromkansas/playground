@@ -73,8 +73,8 @@ export default function GundamStack(){
     id=requestAnimationFrame(paint);return ()=>cancelAnimationFrame(id);
   },[sheets,mode,paused,spin,camera,replay]);
   return <main className="hangar-page">
-    <header><h1>Hangar Exit</h1><span>RX-78-2 Gundam</span></header>
-    <section className="hangar-stage" data-thumbnail><canvas ref={canvas} width={400} height={224} aria-label="Gundam animation inside hangar 07"/>
+    <header><h1>Orbital Platform</h1><span>RX-78-2 Gundam</span></header>
+    <section className="hangar-stage" data-thumbnail><canvas ref={canvas} width={400} height={224} aria-label="Gundam on an isometric orbital platform"/>
       {!sheets&&<div className="hangar-loading">{error?"Sprite sheets failed to load. Reload to retry.":"Loading sprite sheets…"}</div>}</section>
     <div className="hangar-playback">
       <button className="hangar-demo" disabled={!sheets} onClick={()=>play("demo")}>{mode==="demo"?"Replay demo":"Play demo"}</button>
