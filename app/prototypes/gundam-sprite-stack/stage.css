@@ -1,0 +1,14 @@
+.hangar-page{max-width:54rem;margin:auto;padding:clamp(1rem,3vw,2.5rem) 1rem 3rem;display:grid;gap:1rem;color:var(--foreground);font-family:inherit}
+.hangar-page header,.hangar-playback{display:flex;align-items:baseline;flex-wrap:wrap;gap:.8rem}
+.hangar-page header{justify-content:space-between}.hangar-page h1{font-size:clamp(2rem,5vw,3.4rem);font-weight:700;line-height:1;letter-spacing:-.05em;margin:0}
+.hangar-page header span,.hangar-clock{color:var(--muted-foreground);font-family:monospace}
+.hangar-stage{position:relative;border-radius:.8rem;overflow:hidden;background:var(--muted)}
+.hangar-stage canvas{display:block;width:100%;aspect-ratio:400/224;image-rendering:pixelated}
+.hangar-loading{position:absolute;inset:0;display:grid;place-items:center}
+.hangar-page button{min-height:44px;padding:.45rem .9rem;background:var(--card);color:var(--foreground);border:1px solid var(--border);border-radius:.5rem;font:inherit;cursor:pointer;justify-self:start}
+.hangar-page button:disabled{opacity:.5;cursor:default}.hangar-page button:focus-visible{outline:2px solid var(--ring);outline-offset:2px}
+.hangar-page button.hangar-demo,.hangar-page button[aria-pressed=true]{background:var(--primary);color:var(--primary-foreground)}
+.hangar-page h2{font-size:1rem;font-weight:650;margin:0 0 .6rem}.hangar-moves,.hangar-settings{display:flex;flex-wrap:wrap;gap:.4rem}
+.hangar-settings{padding:1rem;background:var(--card);border:1px solid var(--border);border-radius:.5rem;align-items:center}
+.hangar-settings label{flex-basis:100%;text-transform:capitalize}.hangar-settings output{float:right}.hangar-settings input{display:block;width:100%;height:44px}
+@media(max-width:600px){.hangar-settings{position:fixed;z-index:20;inset:auto 0 0;max-height:80dvh;overflow:auto;border-radius:1rem 1rem 0 0;box-shadow:0 0 0 100vmax color-mix(in srgb,var(--foreground) 20%,transparent)}}
