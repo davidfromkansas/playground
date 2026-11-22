@@ -21,3 +21,6 @@ Failed atlas loads show a reload message. Storage and parse failures use default
 
 ## File Structure
 page.tsx manages interaction. render.ts draws the bottom-to-top slices with nearest sampling. slices.png contains 126 frames of 104 × 80 pixels in one row. walk.png packs the nonempty horizontal sections from every gait pose. walk-rects.json maps these regions to offsets and heights for bottom-to-top rendering. metadata.json registers the prototype.
+
+## Battle moves
+Attack and Defend are replayable one-shot actions that return to standing. Either button interrupts the current move. The rifle lifts, flashes and recoils. The shield swings across the torso and holds through contact. Both use battle.png and the bottom-up slices and 75 ms timelines in battle-poses.json. The camera can turn during either action.

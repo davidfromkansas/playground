@@ -1,5 +1,7 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
+import battle from "./battle.png";
+import poses from "./battle-poses.json";
 import walk from "./walk.png";
 import slices from "./slices.png";
 import { drawStack } from "./render";
@@ -12,6 +14,15 @@ export default function GundamStack() {
   const [error, setError] = useState(false);
   const [walkSheet, setWalkSheet] = useState<HTMLImageElement>();
   const [gait, setGait] = useState<"walk" | "freeze" | "stand">("stand");
+  const [battleSheet, setBattleSheet] = useState<HTMLImageElement>();
+  const [action, setAction] = useState<"attack" | "guard" | null>(null);
+  const actionTime = useRef(0);
+  function perform(move: "attack" | "guard") {
+    actionTime.current = 0;
+    elapsed.current = 0;
+    setGait("stand");
+    setAction(move);
+  }
   const elapsed = useRef(0);
   const [running, setRunning] = useState(false);
   const [settings, setSettings] = useState(defaults);
@@ -26,6 +37,10 @@ export default function GundamStack() {
     animation.onload = () => setWalkSheet(animation);
     animation.onerror = () => setError(true);
     animation.src = walk.src;
+    const combat = new Image();
+    combat.onload = () => setBattleSheet(combat);
+    combat.onerror = () => setError(true);
+    combat.src = battle.src;
     setGait(matchMedia("(prefers-reduced-motion: reduce)").matches ? "stand" : "walk");
     try {
       const saved = JSON.parse(localStorage.getItem(key) || "null");
@@ -33,7 +48,7 @@ export default function GundamStack() {
         setSettings(saved); angle.current = saved.angle;
       }
     } catch { /* Use defaults. */ }
-    return () => { img.onload = null; img.onerror = null; animation.onload = null; animation.onerror = null; };
+    return () => { img.onload = null; img.onerror = null; animation.onload = null; animation.onerror = null; combat.onload = null; combat.onerror = null; };
   }, []);
   function change(next: typeof defaults) {
     angle.current = next.angle; setSettings(next);
@@ -46,7 +61,18 @@ export default function GundamStack() {
     function paint(time: number) {
       if (running && previous) angle.current = (angle.current + Math.min(80, time - previous) * .045) % 360;
       if (gait === "walk" && previous) elapsed.current = (elapsed.current + Math.min(80, time - previous)) % 1440;
+      if (action && previous) actionTime.current += Math.min(80, time - previous);
       previous = time;
+      if (action && battleSheet) {
+        const index = Math.floor(actionTime.current / 75);
+        if (index < poses[action].length) {
+          drawStack(ctx!, battleSheet, angle.current, settings.squash, settings.spacing,
+            undefined, poses.rects[poses[action][index]]);
+          frame = requestAnimationFrame(paint);
+          return;
+        }
+        setAction(null);
+      }
       const walking = gait !== "stand" && walkSheet;
       drawStack(ctx!, walking || sheet!, angle.current, settings.squash, settings.spacing,
         walking ? Math.floor(elapsed.current / 60) : undefined);
@@ -54,17 +80,22 @@ export default function GundamStack() {
     }
     frame = requestAnimationFrame(paint);
     return () => cancelAnimationFrame(frame);
-  }, [sheet, walkSheet, gait, running, settings]);
+  }, [sheet, walkSheet, battleSheet, action, gait, running, settings]);
   const button = "min-h-11 rounded-lg border border-border bg-card px-4";
   return <main className="mx-auto max-w-2xl space-y-5 px-4 py-8">
     <h1 className="text-3xl font-bold">RX-78-2 Gundam</h1>
     <div className="sm:flex sm:items-center sm:gap-6">
-      <div data-thumbnail className="min-w-0 flex-1 overflow-hidden rounded-xl bg-muted"><canvas ref={canvas} width={180} height={180} aria-label="Animated pixel-art Gundam with shield and rifle" className="w-full [image-rendering:pixelated]" />{error && <p>Sprite sheet failed to load. Reload to retry.</p>}</div>
+      <div className="min-w-0 flex-1"><div data-thumbnail className=" overflow-hidden rounded-xl bg-muted"><canvas ref={canvas} width={180} height={180} aria-label="Animated pixel-art Gundam with shield and rifle" className="w-full [image-rendering:pixelated]" />{error && <p>Sprite sheet failed to load. Reload to retry.</p>}</div>
+        <div className="mt-3 flex gap-2" aria-label="Battle moves">
+          <button className={button} disabled={!battleSheet} onClick={() => perform("attack")}>Attack</button>
+          <button className={button} disabled={!battleSheet} onClick={() => perform("guard")}>Defend</button>
+        </div>
+      </div>
       <button className={button+" mt-3 sm:hidden"} onClick={() => setPanel(true)}>Adjust stack</button>
       <div className={(panel ? "fixed inset-x-0 bottom-0 z-50 rounded-t-xl border bg-background p-5 " : "hidden ")+"space-y-3 sm:static sm:block sm:w-48 sm:border-0"}>
         <div className="flex flex-wrap gap-2" aria-label="Gundam movement">
-          <button className={button} onClick={() => setGait(gait === "walk" ? "freeze" : "walk")}>{gait === "walk" ? "Pause walk" : "Walk"}</button>
-          <button className={button} onClick={() => { setGait("stand"); elapsed.current = 0; }}>Stand</button>
+          <button className={button} onClick={() => { setAction(null); setGait(gait === "walk" ? "freeze" : "walk"); }}>{gait === "walk" ? "Pause walk" : "Walk"}</button>
+          <button className={button} onClick={() => { setAction(null); setGait("stand"); elapsed.current = 0; }}>Stand</button>
         </div>
         <button className={button} onClick={() => { change({...settings,angle:Math.round(angle.current)%360});setRunning(!running); }}>{running ? "Stop rotation" : "Rotate view"}</button>
         {(["angle","squash","spacing"] as const).map(k => <label key={k} className="block capitalize">{k} <output>{k==="angle" && running ? "Auto" : settings[k]}</output><input className="block h-11 w-full" type="range" min={k==="squash"?.4:0} max={k==="angle"?360:k==="spacing"?2:1} step={k==="angle"?1:.05} value={settings[k]} onChange={e => { if(k==="angle") setRunning(false); change({...settings,angle:Math.round(angle.current)%360,[k]:Number(e.target.value)}); }}/></label>)}
