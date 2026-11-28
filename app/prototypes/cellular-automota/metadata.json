@@ -1,0 +1,9 @@
+{
+  "title": "Cellular Automota",
+  "description": "Conway's Game of Life as a full-screen voxel garden. Ten voxel flower species bloom, spread and wilt across a grassy grid.",
+  "tags": ["Simulation", "3D"],
+  "createdAt": "2026-11-28",
+  "updatedAt": "2026-11-28T19:00:00Z",
+  "hidden": false,
+  "public": false
+}
